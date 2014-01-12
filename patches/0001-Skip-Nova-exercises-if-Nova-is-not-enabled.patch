@@ -1,0 +1,93 @@
+From 4d51412ac401c5269971a1e42f85370dd956bc83 Mon Sep 17 00:00:00 2001
+From: Kiall Mac Innes <kiall@hp.com>
+Date: Sun, 12 Jan 2014 19:35:43 +0000
+Subject: [PATCH] Skip Nova exercises if Nova is not enabled
+
+This allows for ./exercises.sh to complete sucessfully when nova is not
+enabled / installed.
+---
+ exercises/aggregates.sh   |    4 ++++
+ exercises/bundle.sh       |    4 ++++
+ exercises/euca.sh         |    4 ++++
+ exercises/floating_ips.sh |    4 ++++
+ exercises/sec_groups.sh   |    4 ++++
+ 5 files changed, 20 insertions(+)
+
+diff --git a/exercises/aggregates.sh b/exercises/aggregates.sh
+index 1b1ac06..d223301 100755
+--- a/exercises/aggregates.sh
++++ b/exercises/aggregates.sh
+@@ -43,6 +43,10 @@ source $TOP_DIR/exerciserc
+ # Test as the admin user
+ . $TOP_DIR/openrc admin admin
+ 
++# If nova api is not enabled we exit with exitcode 55 so that
++# the exercise is skipped
++is_service_enabled n-api || exit 55
++
+ # Cells does not support aggregates.
+ is_service_enabled n-cell && exit 55
+ 
+diff --git a/exercises/bundle.sh b/exercises/bundle.sh
+index b83678a..5470960 100755
+--- a/exercises/bundle.sh
++++ b/exercises/bundle.sh
+@@ -39,6 +39,10 @@ rm -f $TOP_DIR/cacert.pem
+ rm -f $TOP_DIR/cert.pem
+ rm -f $TOP_DIR/pk.pem
+ 
++# If nova api is not enabled we exit with exitcode 55 so that
++# the exercise is skipped
++is_service_enabled n-api || exit 55
++
+ # Get Certificates
+ nova x509-get-root-cert $TOP_DIR/cacert.pem
+ nova x509-create-cert $TOP_DIR/pk.pem $TOP_DIR/cert.pem
+diff --git a/exercises/euca.sh b/exercises/euca.sh
+index ed521e4..51b2644 100755
+--- a/exercises/euca.sh
++++ b/exercises/euca.sh
+@@ -41,6 +41,10 @@ fi
+ # Import exercise configuration
+ source $TOP_DIR/exerciserc
+ 
++# If nova api is not enabled we exit with exitcode 55 so that
++# the exercise is skipped
++is_service_enabled n-api || exit 55
++
+ # Skip if the hypervisor is Docker
+ [[ "$VIRT_DRIVER" == "docker" ]] && exit 55
+ 
+diff --git a/exercises/floating_ips.sh b/exercises/floating_ips.sh
+index 7055278..4ca90a5 100755
+--- a/exercises/floating_ips.sh
++++ b/exercises/floating_ips.sh
+@@ -38,6 +38,10 @@ fi
+ # Import exercise configuration
+ source $TOP_DIR/exerciserc
+ 
++# If nova api is not enabled we exit with exitcode 55 so that
++# the exercise is skipped
++is_service_enabled n-api || exit 55
++
+ # Skip if the hypervisor is Docker
+ [[ "$VIRT_DRIVER" == "docker" ]] && exit 55
+ 
+diff --git a/exercises/sec_groups.sh b/exercises/sec_groups.sh
+index eb32cc7..d71a1e0 100755
+--- a/exercises/sec_groups.sh
++++ b/exercises/sec_groups.sh
+@@ -33,6 +33,10 @@ source $TOP_DIR/openrc
+ # Import exercise configuration
+ source $TOP_DIR/exerciserc
+ 
++# If nova api is not enabled we exit with exitcode 55 so that
++# the exercise is skipped
++is_service_enabled n-api || exit 55
++
+ # Skip if the hypervisor is Docker
+ [[ "$VIRT_DRIVER" == "docker" ]] && exit 55
+ 
+-- 
+1.7.10.4
+
